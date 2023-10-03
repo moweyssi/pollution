@@ -11,7 +11,7 @@ from pyproj import Transformer
 shp_file_path = 'pub_sca.shp'
 
 gdf = gpd.read_file(shp_file_path)
-gdf.set_crs = 'EPSG:27700'  # Set the CRS to British National Grid (EPSG:27700)
+gdf.crs = 'EPSG:27700'  # Set the CRS to British National Grid (EPSG:27700)
 
 # Define a transformer to convert between CRS
 transformer = Transformer.from_crs('EPSG:4326', 'EPSG:27700', always_xy=True)
@@ -50,7 +50,8 @@ point = Point(transformer.transform(longitude, latitude))
 is_within_area = gdf.geometry.contains(point).any()
 
 # Calculate the centroid of the GeoDataFrame for map centering
-web_map = gdf.to_crs(3857) 
+web_map = gdf.to_crs(espg=3857) 
+
 centroid = web_map.unary_union.centroid
 
 # Create a Folium map centered at the calculated centroid
