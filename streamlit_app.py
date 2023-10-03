@@ -66,7 +66,7 @@ st.text(centroid)
 
 # Add all GeoDataFrame shapes as overlays to the map
  
-for idx, row in web_map.iterrows():
+for idx, row in gdf.iterrows():
     sim_geo = gpd.GeoSeries(row["geometry"]).simplify(tolerance=0.02)
     geo_json = sim_geo.to_json()
     folium.GeoJson(geo_json, name=f"Shape {idx}").add_to(m)
