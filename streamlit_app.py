@@ -60,7 +60,7 @@ folium.Marker([latitude, longitude], icon=folium.Icon(color='red')).add_to(marke
 for idx, row in gdf.iterrows():
     sim_geo = gpd.GeoSeries(row["geometry"]).simplify(tolerance=0.001)
     geo_j = sim_geo.to_json()
-    folium.GeoJson(geo_j).add_to(m)
+    geo_j.add_to(m)
 
 # Display the folium map using st_folium
 st_folium(m)
