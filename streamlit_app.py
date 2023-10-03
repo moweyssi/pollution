@@ -52,7 +52,7 @@ marker_cluster = MarkerCluster().add_to(m)
 folium.Marker([latitude, longitude], icon=folium.Icon(color='red')).add_to(marker_cluster)
 
 # Display the folium map using st.write
-st.write(m)
+st.map(m)
 
 if is_within_area:
     st.success(f"The postcode {postcode_to_check} is within a smoke control area.")
