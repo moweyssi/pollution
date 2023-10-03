@@ -50,7 +50,7 @@ point = Point(transformer.transform(longitude, latitude))
 is_within_area = gdf.geometry.contains(point).any()
 
 # Calculate the centroid of the GeoDataFrame for map centering
-web_map = gdf.to_crs(espg=3857) 
+web_map = gdf.to_crs('EPSG:3857') 
 
 centroid = web_map.unary_union.centroid
 
