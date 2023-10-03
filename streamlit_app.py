@@ -29,9 +29,8 @@ def get_coordinates_for_postcode(postcode):
         raise Exception(f"Failed to retrieve coordinates for postcode {postcode}")
 
 # Define the UK postcode you want to check
-st.title("Smoke control area postcode checker")
-st.text("Give a Scottish postcode to check")
-postcode_to_check = st.text_input(None)
+st.title("Smoke control area checker")
+postcode_to_check = st.text_input("Enter Scottish postcode to check")
 
 # Get the coordinates (latitude and longitude) for the given postcode
 try:
