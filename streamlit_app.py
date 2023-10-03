@@ -35,7 +35,7 @@ postcode_to_check = st.text_input("Enter Scottish postcode to check")
 # Get the coordinates (latitude and longitude) for the given postcode
 try:
     latitude, longitude = get_coordinates_for_postcode(postcode_to_check)
-    st.write(f"Latitude: {latitude}, Longitude: {longitude}")
+    #st.write(f"Latitude: {latitude}, Longitude: {longitude}")
 except Exception as e:
     st.error(e)
     st.stop()
