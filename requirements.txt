@@ -1,6 +1,6 @@
 streamlit
+contextily
 geopandas
 matplotlib
 pyproj
 shapely
-contextily
