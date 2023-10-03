@@ -31,7 +31,7 @@ def get_coordinates_for_postcode(postcode):
 # Define the UK postcode you want to check
 st.title("Smoke control area postcode checker")
 st.text("Give a Scottish postcode to check")
-postcode_to_check = st.text_input("Enter postcode")
+postcode_to_check = st.text_input(None)
 
 # Get the coordinates (latitude and longitude) for the given postcode
 try:
