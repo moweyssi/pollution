@@ -35,7 +35,7 @@ try:
     longitude, latitude = get_coordinates_for_postcode(postcode_to_check)
     print(latitude,longitude)
 except Exception as e:
-    print(e)
+    st.text(e)
     exit(1)
 
 # Create a Shapely Point object from the postcode coordinates
