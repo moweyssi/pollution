@@ -45,6 +45,10 @@ point = Point(transformer.transform(longitude, latitude))
 
 # Check if the point is within any of the geometries in the GeoDataFrame
 is_within_area = gdf.geometry.contains(point).any()
+if is_within_area:
+    st.success(f"The postcode {postcode_to_check} is within a smoke control area.")
+else:
+    st.warning(f"The postcode {postcode_to_check} is not within a smoke control area.")
 
 # Create a Folium map centered at the calculated centroid
 m = folium.Map(location=[latitude, longitude], zoom_start=4)
@@ -64,9 +68,5 @@ for idx, row in gdf.iterrows():
 st.text(geo_json)
 
 # Display the folium map using st_folium
-st_folium(m)
+st_folium(m,width="full")
 
-if is_within_area:
-    st.success(f"The postcode {postcode_to_check} is within a smoke control area.")
-else:
-    st.warning(f"The postcode {postcode_to_check} is not within a smoke control area.")
