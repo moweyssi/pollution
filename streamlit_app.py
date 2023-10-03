@@ -15,6 +15,7 @@ gdf = gpd.read_file(shp_file_path, crs='EPSG:27700')
 transformer = Transformer.from_crs('EPSG:4326', 'EPSG:27700', always_xy=True)
 
 # Function to get the coordinates (latitude and longitude) for a UK postcode using postcodes.io API
+@st.cache
 def get_coordinates_for_postcode(postcode):
     api_url = f"https://api.postcodes.io/postcodes/{postcode}"
     response = requests.get(api_url)
