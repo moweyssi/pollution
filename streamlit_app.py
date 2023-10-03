@@ -52,7 +52,7 @@ gdf = gdf.to_crs('EPSG:3857')
 centroid = gdf.unary_union.centroid
 
 # Create a Folium map centered at the calculated centroid
-m = folium.Map(location=[latitude, longitude], zoom_start=10)
+m = folium.Map(location=[latitude, longitude], zoom_start=10,crs='EPSG:3857')
 st.text(centroid)
 
 # Add markers for the GeoDataFrame and the point
