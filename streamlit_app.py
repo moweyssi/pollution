@@ -45,10 +45,18 @@ point = Point(longitude, latitude)
 
 # Check if the point is within any of the geometries in the GeoDataFrame
 is_within_area = gdf.geometry.contains(point).any()
+st.subheader("GeoPandas Shapefile")
+st.map(gdf)
+# Display the point
+st.subheader("Point Location")
+#st.write(f"Latitude: {lat}, Longitude: {lon}")
+
+
 point_gdf = gpd.GeoDataFrame({'geometry': [point]}, crs='EPSG:27700')
 fig, ax = plt.subplots(figsize=(8, 8))
 gdf.plot(ax=ax, color='blue', alpha=0.7)
 point_gdf.plot(ax=ax, color='red', markersize=50, label='Target Point')
+st.map(point_gdf)
 plt.legend()
 plt.title('Shapefile with a Single Point')
 plt.xlabel('Longitude')
