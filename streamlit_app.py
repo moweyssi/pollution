@@ -50,20 +50,21 @@ if is_within_area:
 else:
     st.warning(f"The postcode {postcode_to_check} is not within a smoke control area.")
 
-# Create a Folium map centered at the calculated centroid
-m = folium.Map(location=[latitude, longitude], zoom_start=8)
+# Create or get the Folium map centered at the calculated centroid
+if 'map' not in st.session_state:
+    st.session_state.map = folium.Map(location=[latitude, longitude], zoom_start=8)
 
 # Add markers for the GeoDataFrame and the point
-marker_cluster = MarkerCluster().add_to(m)
+marker_cluster = MarkerCluster().add_to(st.session_state.map)
 folium.Marker([latitude, longitude], icon=folium.Icon(color='red')).add_to(marker_cluster)
 
 # Add all GeoDataFrame shapes as overlays to the map
 for idx, row in gdf.iterrows():
-    sim_geo = gpd.GeoSeries(row["geometry"]).simplify(tolerance=0.001)
+    sim_geo = gpd.GeoSeries(row["geometry"]).simplify(tolerance=0.02)
     sim_geo.crs = 'EPSG:27700'
     goodcrs = sim_geo.to_crs('EPSG:4326')
     geo_json = goodcrs.__geo_interface__
-    folium.GeoJson(geo_json, name=f"Shape {idx}").add_to(m)
+    folium.GeoJson(geo_json, name=f"Shape {idx}").add_to(st.session_state.map)
 
 # Display the Folium map
-st_folium(m, width="100%", height=500)
+st_folium(st.session_state.map, width="100%", height=500)
