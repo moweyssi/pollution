@@ -48,7 +48,6 @@ is_within_area = gdf.geometry.contains(point).any()
 
 # Create a Folium map centered at the calculated centroid
 m = folium.Map(location=[latitude, longitude], zoom_start=10)
-st.text(centroid)
 
 # Add markers for the GeoDataFrame and the point
 marker_cluster = MarkerCluster().add_to(m)
