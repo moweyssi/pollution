@@ -24,26 +24,6 @@ def get_coordinates_for_postcode(postcode):
         return data["result"]["latitude"], data["result"]["longitude"]
     raise Exception(f"Failed to retrieve coordinates for postcode {postcode}")
 
-# Function to create the Folium map
-@st.cache
-def create_folium_map(latitude, longitude, gdf):
-    # Create a Folium map centered at the calculated centroid
-    m = folium.Map(location=[latitude, longitude], zoom_start=8)
-
-    # Add markers for the GeoDataFrame and the point
-    marker_cluster = MarkerCluster().add_to(m)
-    folium.Marker([latitude, longitude], icon=folium.Icon(color='red')).add_to(marker_cluster)
-
-    # Add all GeoDataFrame shapes as overlays to the map
-    for idx, row in gdf.iterrows():
-        sim_geo = gpd.GeoSeries(row["geometry"]).simplify(tolerance=0.02)
-        sim_geo.crs = 'EPSG:27700'
-        goodcrs = sim_geo.to_crs('EPSG:4326')
-        geo_json = goodcrs.__geo_interface__
-        folium.GeoJson(geo_json, name=f"Shape {idx}").add_to(m)
-
-    return m
-
 # Streamlit app title and input
 st.title("Smoke control area checker")
 postcode_to_check = st.text_input("Enter Scottish postcode to check")
@@ -70,5 +50,20 @@ if is_within_area:
 else:
     st.warning(f"The postcode {postcode_to_check} is not within a smoke control area.")
 
-# Create the Folium map and display it
-st_folium(create_folium_map(latitude, longitude, gdf), width="100%", height=500)
+# Create a Folium map centered at the calculated centroid
+m = folium.Map(location=[latitude, longitude], zoom_start=8)
+
+# Add markers for the GeoDataFrame and the point
+marker_cluster = MarkerCluster().add_to(m)
+folium.Marker([latitude, longitude], icon=folium.Icon(color='red')).add_to(marker_cluster)
+
+# Add all GeoDataFrame shapes as overlays to the map
+for idx, row in gdf.iterrows():
+    sim_geo = gpd.GeoSeries(row["geometry"]).simplify(tolerance=0.02)
+    sim_geo.crs = 'EPSG:27700'
+    goodcrs = sim_geo.to_crs('EPSG:4326')
+    geo_json = goodcrs.__geo_interface__
+    folium.GeoJson(geo_json, name=f"Shape {idx}").add_to(m)
+
+# Display the Folium map
+st_folium(m, width="100%", height=500)
