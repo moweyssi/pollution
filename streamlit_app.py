@@ -11,7 +11,7 @@ from pyproj import Transformer
 shp_file_path = 'pub_sca.shp'
 
 gdf = gpd.read_file(shp_file_path)
-gdf.crs = 'EPSG:27700'
+gdf.crs = 'EPSG:27700'  # Set the CRS to British National Grid (EPSG:27700)
 
 # Define a transformer to convert between CRS
 transformer = Transformer.from_crs('EPSG:4326', 'EPSG:27700', always_xy=True)
@@ -56,8 +56,11 @@ m = folium.Map(location=[latitude, longitude], zoom_start=12)
 marker_cluster = MarkerCluster().add_to(m)
 folium.Marker([latitude, longitude], icon=folium.Icon(color='red')).add_to(marker_cluster)
 
+# Convert the GeoDataFrame to the same CRS as the map (Web Mercator - EPSG:3857)
+gdf_web_mercator = gdf.to_crs('EPSG:3857')
+
 # Add all GeoDataFrame shapes as overlays to the map
-for idx, row in gdf.iterrows():
+for idx, row in gdf_web_mercator.iterrows():
     sim_geo = gpd.GeoSeries(row["geometry"]).simplify(tolerance=0.001)
     geo_json = sim_geo.to_json()
     folium.GeoJson(geo_json, name=f"Shape {idx}").add_to(m)
