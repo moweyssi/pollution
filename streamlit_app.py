@@ -2,9 +2,8 @@ import streamlit as st
 import geopandas as gpd
 from shapely.geometry import Point
 import requests
-import matplotlib.pyplot as plt
-import pyproj
-import contextily as ctx
+import folium
+from folium.plugins import MarkerCluster
 
 # Load the SHP file into a GeoDataFrame
 shp_file_path = 'pub_sca.shp'
@@ -20,50 +19,42 @@ def get_coordinates_for_postcode(postcode):
         data = response.json()
         latitude = data["result"]["latitude"]
         longitude = data["result"]["longitude"]
-        # Convert the point's coordinates to EPSG 27700
-        projector = pyproj.Transformer.from_crs("EPSG:4326", "EPSG:27700", always_xy=True)
-        x, y = projector.transform(longitude, latitude)
-        return x, y
+        return latitude, longitude
     else:
         raise Exception(f"Failed to retrieve coordinates for postcode {postcode}")
 
 # Define the UK postcode you want to check
-st.text("gimmi postcode")
-postcode_to_check = st.text_input("gigi")
+st.text("Give postcode")
+postcode_to_check = st.text_input("Enter postcode")
 
 # Get the coordinates (latitude and longitude) for the given postcode
 try:
-    longitude, latitude = get_coordinates_for_postcode(postcode_to_check)
-    print(latitude, longitude)
+    latitude, longitude = get_coordinates_for_postcode(postcode_to_check)
+    st.write(f"Latitude: {latitude}, Longitude: {longitude}")
 except Exception as e:
-    st.text(e)
-    exit(1)
+    st.error(e)
+    st.stop()
 
 # Create a Shapely Point object from the postcode coordinates
 point = Point(longitude, latitude)
 
 # Check if the point is within any of the geometries in the GeoDataFrame
 is_within_area = gdf.geometry.contains(point).any()
-point_gdf = gpd.GeoDataFrame({'geometry': [point]}, crs='EPSG:27700')
 
-# Create a Matplotlib figure and plot the GeoDataFrame and point
-fig, ax = plt.subplots(figsize=(8, 8))
+# Create a folium map
+m = folium.Map(location=[latitude, longitude], zoom_start=12)
 
-# Use contextily to add a basemap with a valid zoom level (e.g., 10)
-ctx.add_basemap(ax, crs=gdf.crs.to_string(), source=ctx.providers.OpenStreetMap.Mapnik, zoom=1)
+# Add markers for the GeoDataFrame and the point
+for idx, row in gdf.iterrows():
+    folium.GeoJson(row.geometry).add_to(m)
 
-gdf.plot(ax=ax, color='blue', alpha=0.7)
-point_gdf.plot(ax=ax, color='red', markersize=50, label='Target Point')
-plt.legend()
-plt.title('Shapefile with a Single Point')
-plt.xlabel('Longitude')
-plt.ylabel('Latitude')
-plt.grid(True)
+marker_cluster = MarkerCluster().add_to(m)
+folium.Marker([latitude, longitude], icon=folium.Icon(color='red')).add_to(marker_cluster)
 
-# Display the Matplotlib figure using st.pyplot()
-st.pyplot(fig)
+# Display the folium map using st.write
+st.write(m)
 
 if is_within_area:
-    st.text(f"The postcode {postcode_to_check} is within a smoke control area.")
+    st.success(f"The postcode {postcode_to_check} is within a smoke control area.")
 else:
-    st.text(f"The postcode {postcode_to_check} is not within a smoke control area.")
+    st.warning(f"The postcode {postcode_to_check} is not within a smoke control area.")

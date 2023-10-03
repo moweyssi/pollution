@@ -1,5 +1,6 @@
 streamlit
 contextily
+folium
 geopandas
 matplotlib
 pyproj
