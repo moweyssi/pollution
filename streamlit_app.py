@@ -1,5 +1,6 @@
 import streamlit as st
 import geopandas as gpd
+from shapely.geometry import Point
 import requests
 import folium
 from folium.plugins import MarkerCluster
@@ -11,6 +12,9 @@ shp_file_path = 'pub_sca.shp'
 
 gdf = gpd.read_file(shp_file_path)
 gdf.crs = 'EPSG:27700'  # Set the CRS to British National Grid (EPSG:27700)
+
+# Define a transformer to convert between CRS
+transformer = Transformer.from_crs('EPSG:4326', 'EPSG:27700', always_xy=True)
 
 # Function to get the coordinates (latitude and longitude) for a UK postcode using postcodes.io API
 def get_coordinates_for_postcode(postcode):
@@ -36,11 +40,17 @@ except Exception as e:
     st.error(e)
     st.stop()
 
-# Create a folium map without specifying the CRS initially
-m = folium.Map(location=[latitude, longitude], zoom_start=12)
+# Create a Shapely Point object from the postcode coordinates
+point = Point(longitude, latitude)
 
-# Convert the GeoDataFrame to the same CRS as the map (EPSG:3857 - Web Mercator)
-gdf = gdf.to_crs('EPSG:3857')
+# Transform the point to the same CRS as the GeoDataFrame
+point = Point(transformer.transform(longitude, latitude))
+
+# Check if the point is within any of the geometries in the GeoDataFrame
+is_within_area = gdf.geometry.contains(point).any()
+
+# Create a folium map with the same CRS as the GeoDataFrame (EPSG:27700)
+m = folium.Map(location=[latitude, longitude], zoom_start=12, crs='EPSG27700')
 
 # Add markers for the GeoDataFrame and the point
 marker_cluster = MarkerCluster().add_to(m)
@@ -54,9 +64,6 @@ for idx, row in gdf.iterrows():
 
 # Display the folium map using st_folium
 st_folium(m)
-
-# Check if the point is within any of the geometries in the GeoDataFrame
-is_within_area = gdf.geometry.contains(Point(longitude, latitude)).any()
 
 if is_within_area:
     st.success(f"The postcode {postcode_to_check} is within a smoke control area.")
