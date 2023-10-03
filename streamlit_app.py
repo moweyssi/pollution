@@ -49,12 +49,18 @@ point = Point(transformer.transform(longitude, latitude))
 # Check if the point is within any of the geometries in the GeoDataFrame
 is_within_area = gdf.geometry.contains(point).any()
 
+# Calculate the centroid of the GeoDataFrame for map centering
+centroid = gdf.unary_union.centroid
+
+# Create a Folium map centered at the calculated centroid
+m = folium.Map(location=[centroid.y, centroid.x], zoom_start=10)
+
 # Create a folium map with the same CRS as the GeoDataFrame (EPSG:27700)
-m = folium.Map(location=[latitude, longitude], zoom_start=9)
+#m = folium.Map(location=[latitude, longitude], zoom_start=9)
 
 # Add markers for the GeoDataFrame and the point
-marker_cluster = MarkerCluster().add_to(m)
-folium.Marker([latitude, longitude], icon=folium.Icon(color='red')).add_to(marker_cluster)
+#marker_cluster = MarkerCluster().add_to(m)
+#folium.Marker([latitude, longitude], icon=folium.Icon(color='red')).add_to(marker_cluster)
 
 # Add all GeoDataFrame shapes as overlays to the map
 web_map = gdf.to_crs(3857)  
