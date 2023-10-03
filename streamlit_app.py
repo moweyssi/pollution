@@ -43,9 +43,6 @@ except Exception as e:
 # Create a Shapely Point object from the postcode coordinates
 point = Point(longitude, latitude)
 
-# Transform the point to the same CRS as the GeoDataFrame
-point = Point(transformer.transform(longitude, latitude))
-
 # Check if the point is within any of the geometries in the GeoDataFrame
 is_within_area = gdf.geometry.contains(point).any()
 
