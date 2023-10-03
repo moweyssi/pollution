@@ -11,7 +11,7 @@ from pyproj import Transformer
 shp_file_path = 'pub_sca.shp'
 
 gdf = gpd.read_file(shp_file_path)
-gdf.crs = 'EPSG:27700'  # Set the CRS to British National Grid (EPSG:27700)
+gdf.set_crs = 'EPSG:27700'  # Set the CRS to British National Grid (EPSG:27700)
 
 # Define a transformer to convert between CRS
 transformer = Transformer.from_crs('EPSG:4326', 'EPSG:27700', always_xy=True)
