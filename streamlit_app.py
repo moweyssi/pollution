@@ -46,13 +46,8 @@ point = Point(transformer.transform(longitude, latitude))
 # Check if the point is within any of the geometries in the GeoDataFrame
 is_within_area = gdf.geometry.contains(point).any()
 
-# Calculate the centroid of the GeoDataFrame for map centering
-gdf = gdf.to_crs('EPSG:3857')
-
-centroid = gdf.unary_union.centroid
-
 # Create a Folium map centered at the calculated centroid
-m = folium.Map(location=[latitude, longitude], zoom_start=10,crs='EPSG:3857')
+m = folium.Map(location=[latitude, longitude], zoom_start=10)
 st.text(centroid)
 
 # Add markers for the GeoDataFrame and the point
@@ -61,11 +56,12 @@ folium.Marker([latitude, longitude], icon=folium.Icon(color='red')).add_to(marke
 
 # Add all GeoDataFrame shapes as overlays to the map
  
-for idx, row in gdf.iterrows():
-    sim_geo = gpd.GeoSeries(row["geometry"]).simplify(tolerance=0.02)
-    geo_json = sim_geo.to_json()
-    folium.GeoJson(geo_json, name=f"Shape {idx}").add_to(m)
+#for idx, row in gdf.iterrows():
+#    sim_geo = gpd.GeoSeries(row["geometry"]).simplify(tolerance=0.02)
+#    geo_json = sim_geo.to_json()
+#    folium.GeoJson(geo_json, name=f"Shape {idx}").add_to(m)
 
+folium.GeoJson("myshpfile.geojson").add_to(m)
 # Display the folium map using st_folium
 st_folium(m)
 
