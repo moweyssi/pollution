@@ -50,7 +50,8 @@ point = Point(transformer.transform(longitude, latitude))
 is_within_area = gdf.geometry.contains(point).any()
 
 # Calculate the centroid of the GeoDataFrame for map centering
-centroid = gdf.unary_union.centroid
+web_map = gdf.to_crs(3857) 
+centroid = web_map.unary_union.centroid
 
 # Create a Folium map centered at the calculated centroid
 m = folium.Map(location=[centroid.y, centroid.x], zoom_start=10)
@@ -63,7 +64,7 @@ st.text(centroid)
 #folium.Marker([latitude, longitude], icon=folium.Icon(color='red')).add_to(marker_cluster)
 
 # Add all GeoDataFrame shapes as overlays to the map
-web_map = gdf.to_crs(3857)  
+ 
 for idx, row in web_map.iterrows():
     sim_geo = gpd.GeoSeries(row["geometry"]).simplify(tolerance=0.02)
     geo_json = sim_geo.to_json()
