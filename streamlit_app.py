@@ -4,7 +4,7 @@ from shapely.geometry import Point
 import requests
 import matplotlib.pyplot as plt
 import pyproj
-import contextily as cx
+import contextily as ctx
 
 # Load the SHP file into a GeoDataFrame
 shp_file_path = 'pub_sca.shp'
@@ -34,7 +34,7 @@ postcode_to_check = st.text_input("gigi")
 # Get the coordinates (latitude and longitude) for the given postcode
 try:
     longitude, latitude = get_coordinates_for_postcode(postcode_to_check)
-    print(latitude,longitude)
+    print(latitude, longitude)
 except Exception as e:
     st.text(e)
     exit(1)
@@ -48,9 +48,12 @@ point_gdf = gpd.GeoDataFrame({'geometry': [point]}, crs='EPSG:27700')
 
 # Create a Matplotlib figure and plot the GeoDataFrame and point
 fig, ax = plt.subplots(figsize=(8, 8))
+
+# Use contextily to add a basemap
+ctx.add_basemap(ax, crs=gdf.crs.to_string(), source=ctx.providers.OpenStreetMap.Mapnik)
+
 gdf.plot(ax=ax, color='blue', alpha=0.7)
 point_gdf.plot(ax=ax, color='red', markersize=50, label='Target Point')
-cx.add_basemap(ax,crs=gdf.crs)
 plt.legend()
 plt.title('Shapefile with a Single Point')
 plt.xlabel('Longitude')
