@@ -49,18 +49,15 @@ point = Point(transformer.transform(longitude, latitude))
 # Check if the point is within any of the geometries in the GeoDataFrame
 is_within_area = gdf.geometry.contains(point).any()
 
-# Create a folium map
-m = folium.Map(location=[latitude, longitude], zoom_start=12)
+# Create a folium map with the same CRS as the GeoDataFrame (EPSG:27700)
+m = folium.Map(location=[latitude, longitude], zoom_start=12, crs='EPSG:27700')
 
 # Add markers for the GeoDataFrame and the point
 marker_cluster = MarkerCluster().add_to(m)
 folium.Marker([latitude, longitude], icon=folium.Icon(color='red')).add_to(marker_cluster)
 
-# Convert the GeoDataFrame to the same CRS as the map (Web Mercator - EPSG:3857)
-gdf_web_mercator = gdf.to_crs('EPSG:3857')
-
 # Add all GeoDataFrame shapes as overlays to the map
-for idx, row in gdf_web_mercator.iterrows():
+for idx, row in gdf.iterrows():
     sim_geo = gpd.GeoSeries(row["geometry"]).simplify(tolerance=0.001)
     geo_json = sim_geo.to_json()
     folium.GeoJson(geo_json, name=f"Shape {idx}").add_to(m)
