@@ -50,7 +50,7 @@ point = Point(transformer.transform(longitude, latitude))
 is_within_area = gdf.geometry.contains(point).any()
 
 # Create a folium map with the same CRS as the GeoDataFrame (EPSG:27700)
-m = folium.Map(location=[latitude, longitude], zoom_start=12)
+m = folium.Map(location=[latitude, longitude], zoom_start=9)
 
 # Add markers for the GeoDataFrame and the point
 #marker_cluster = MarkerCluster().add_to(m)
