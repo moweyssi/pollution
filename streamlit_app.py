@@ -56,6 +56,6 @@ plt.ylabel('Latitude')
 plt.grid(True)
 plt.show()
 if is_within_area:
-    st.text(f"The postcode {postcode_to_check} is within one of the defined areas.")
+    st.text(f"The postcode {postcode_to_check} is within a smoke control area.")
 else:
-    st.text(f"The postcode {postcode_to_check} is not within any of the defined areas.")
+    st.text(f"The postcode {postcode_to_check} is not within a smoke control area.")
