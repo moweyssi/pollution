@@ -53,12 +53,11 @@ is_within_area = gdf.geometry.contains(point).any()
 m = folium.Map(location=[latitude, longitude], zoom_start=9)
 
 # Add markers for the GeoDataFrame and the point
-#marker_cluster = MarkerCluster().add_to(m)
-#folium.Marker([latitude, longitude], icon=folium.Icon(color='red')).add_to(marker_cluster)
+marker_cluster = MarkerCluster().add_to(m)
+folium.Marker([latitude, longitude], icon=folium.Icon(color='red')).add_to(marker_cluster)
 
 # Add all GeoDataFrame shapes as overlays to the map
 web_map = gdf.to_crs(3857)  
-print(web_map)
 for idx, row in web_map.iterrows():
     sim_geo = gpd.GeoSeries(row["geometry"]).simplify(tolerance=0.02)
     geo_json = sim_geo.to_json()
