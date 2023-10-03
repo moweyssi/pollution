@@ -4,6 +4,7 @@ from shapely.geometry import Point
 import requests
 import folium
 from folium.plugins import MarkerCluster
+from streamlit-folium import st_folium
 
 # Load the SHP file into a GeoDataFrame
 shp_file_path = 'pub_sca.shp'
@@ -52,7 +53,7 @@ marker_cluster = MarkerCluster().add_to(m)
 folium.Marker([latitude, longitude], icon=folium.Icon(color='red')).add_to(marker_cluster)
 
 # Display the folium map using st.write
-st.map(m)
+st_folium(m)
 
 if is_within_area:
     st.success(f"The postcode {postcode_to_check} is within a smoke control area.")
