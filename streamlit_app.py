@@ -50,9 +50,9 @@ point = Point(transformer.transform(longitude, latitude))
 is_within_area = gdf.geometry.contains(point).any()
 
 # Calculate the centroid of the GeoDataFrame for map centering
-web_map = gdf.to_crs('EPSG:3857') 
+gdf.crs = 'EPSG:3857' 
 
-centroid = web_map.unary_union.centroid
+centroid = gdf.unary_union.centroid
 
 # Create a Folium map centered at the calculated centroid
 m = folium.Map(location=[centroid.y, centroid.x], zoom_start=10)
