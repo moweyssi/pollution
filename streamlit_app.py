@@ -50,24 +50,20 @@ if is_within_area:
 else:
     st.warning(f"The postcode {postcode_to_check} is not within a smoke control area.")
 
-# Check if the map has already been displayed using session_state
-if 'map_displayed' not in st.session_state:
-    st.session_state.map_displayed = True  # Set session_state to indicate map has been displayed
+# Create a Folium map centered at the calculated centroid
+m = folium.Map(location=[latitude, longitude], zoom_start=8)
 
-    # Create a Folium map centered at the calculated centroid
-    m = folium.Map(location=[latitude, longitude], zoom_start=8)
+# Add markers for the GeoDataFrame and the point
+marker_cluster = MarkerCluster().add_to(m)
+folium.Marker([latitude, longitude], icon=folium.Icon(color='red')).add_to(marker_cluster)
 
-    # Add markers for the GeoDataFrame and the point
-    marker_cluster = MarkerCluster().add_to(m)
-    folium.Marker([latitude, longitude], icon=folium.Icon(color='red')).add_to(marker_cluster)
+# Add all GeoDataFrame shapes as overlays to the map
+for idx, row in gdf.iterrows():
+    sim_geo = gpd.GeoSeries(row["geometry"]).simplify(tolerance=0.02)
+    sim_geo.crs = 'EPSG:27700'
+    goodcrs = sim_geo.to_crs('EPSG:4326')
+    geo_json = goodcrs.__geo_interface__
+    folium.GeoJson(geo_json, name=f"Shape {idx}").add_to(m)
 
-    # Add all GeoDataFrame shapes as overlays to the map
-    for idx, row in gdf.iterrows():
-        sim_geo = gpd.GeoSeries(row["geometry"]).simplify(tolerance=0.02)
-        sim_geo.crs = 'EPSG:27700'
-        goodcrs = sim_geo.to_crs('EPSG:4326')
-        geo_json = goodcrs.__geo_interface__
-        folium.GeoJson(geo_json, name=f"Shape {idx}").add_to(m)
-
-    # Display the Folium map
-    st_folium(m, width="100%", height=500)
+# Display the Folium map
+st_folium(m, width="100%", height=500)
