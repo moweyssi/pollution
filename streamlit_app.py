@@ -54,7 +54,7 @@ centroid = gdf.unary_union.centroid
 
 # Create a Folium map centered at the calculated centroid
 m = folium.Map(location=[centroid.y, centroid.x], zoom_start=10)
-
+st.text(centroid)
 # Create a folium map with the same CRS as the GeoDataFrame (EPSG:27700)
 #m = folium.Map(location=[latitude, longitude], zoom_start=9)
 
