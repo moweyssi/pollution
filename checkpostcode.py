@@ -28,7 +28,7 @@ def get_coordinates_for_postcode(postcode):
 
 # Define the UK postcode you want to check
 st.text("gimmi postcode")
-postcode_to_check = "eh8 9js"
+postcode_to_check = st.text_input("gigi")
 
 # Get the coordinates (latitude and longitude) for the given postcode
 try:
