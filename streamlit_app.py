@@ -51,7 +51,7 @@ else:
     st.warning(f"The postcode {postcode_to_check} is not within a smoke control area.")
 
 # Create a Folium map centered at the calculated centroid
-m = folium.Map(location=[latitude, longitude], zoom_start=6)
+m = folium.Map(location=[latitude, longitude], zoom_start=8)
 
 # Add markers for the GeoDataFrame and the point
 marker_cluster = MarkerCluster().add_to(m)
