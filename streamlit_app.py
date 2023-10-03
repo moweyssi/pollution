@@ -56,9 +56,8 @@ m = folium.Map(location=[latitude, longitude], zoom_start=12)
 marker_cluster = MarkerCluster().add_to(m)
 folium.Marker([latitude, longitude], icon=folium.Icon(color='red')).add_to(marker_cluster)
 
-# Add all GeoDataFrame shapes as overlays to the map
-for idx, row in gdf.iterrows():
-    folium.GeoJson(row.geometry).add_to(m)
+# Use GeoJson to add all GeoDataFrame shapes as overlays to the map
+folium.GeoJson(gdf, name='GeoDataFrame').add_to(m)
 
 # Display the folium map using st_folium
 st_folium(m)
