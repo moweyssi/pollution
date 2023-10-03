@@ -60,7 +60,7 @@ folium.Marker([latitude, longitude], icon=folium.Icon(color='red')).add_to(marke
 # Add all GeoDataFrame shapes as overlays to the map
  
 for idx, row in gdf.iterrows():
-    sim_geo = gpd.GeoSeries(row["geometry"]).simplify(tolerance=0.002)
+    sim_geo = gpd.GeoSeries(row["geometry"]).simplify(tolerance=0.02)
     sim_geo.crs = 'EPSG:27700'
     goodcrs = sim_geo.to_crs('EPSG:4326')
     geo_json = goodcrs.to_json()
