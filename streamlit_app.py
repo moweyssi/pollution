@@ -66,4 +66,4 @@ for idx, row in gdf.iterrows():
     folium.GeoJson(geo_json, name=f"Shape {idx}").add_to(m)
 
 # Display the Folium map
-st_folium(m, width="100%", height=500)
+folium_static(m, width="100%", height=500)
