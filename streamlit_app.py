@@ -4,7 +4,7 @@ from shapely.geometry import Point
 import requests
 import folium
 from folium.plugins import MarkerCluster
-from streamlit-folium import st_folium
+from streamlit_folium import st_folium
 
 # Load the SHP file into a GeoDataFrame
 shp_file_path = 'pub_sca.shp'
