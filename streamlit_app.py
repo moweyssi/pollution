@@ -5,7 +5,7 @@ import requests
 import folium
 from folium.plugins import MarkerCluster
 from pyproj import Transformer
-from streamlit_folium import st_folium
+from streamlit_folium import st_folium, folium_static
 
 # Load the SHP file into a GeoDataFrame
 shp_file_path = 'pub_sca.shp'
