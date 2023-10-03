@@ -5,12 +5,16 @@ import requests
 import folium
 from folium.plugins import MarkerCluster
 from streamlit_folium import st_folium
+from pyproj import Transformer
 
 # Load the SHP file into a GeoDataFrame
 shp_file_path = 'pub_sca.shp'
 
 gdf = gpd.read_file(shp_file_path)
 gdf.crs = 'EPSG:27700'
+
+# Define a transformer to convert between CRS
+transformer = Transformer.from_crs('EPSG:4326', 'EPSG:27700', always_xy=True)
 
 # Function to get the coordinates (latitude and longitude) for a UK postcode using postcodes.io API
 def get_coordinates_for_postcode(postcode):
@@ -38,6 +42,9 @@ except Exception as e:
 
 # Create a Shapely Point object from the postcode coordinates
 point = Point(longitude, latitude)
+
+# Transform the point to the same CRS as the GeoDataFrame
+point = Point(transformer.transform(longitude, latitude))
 
 # Check if the point is within any of the geometries in the GeoDataFrame
 is_within_area = gdf.geometry.contains(point).any()
