@@ -47,7 +47,7 @@ point = Point(transformer.transform(longitude, latitude))
 is_within_area = gdf.geometry.contains(point).any()
 
 # Create a Folium map centered at the calculated centroid
-m = folium.Map(location=[latitude, longitude], zoom_start=10)
+m = folium.Map(location=[latitude, longitude], zoom_start=4)
 
 # Add markers for the GeoDataFrame and the point
 marker_cluster = MarkerCluster().add_to(m)
@@ -63,7 +63,6 @@ for idx, row in gdf.iterrows():
     folium.GeoJson(geo_json, name=f"Shape {idx}").add_to(m)
 st.text(geo_json)
 
-#folium.GeoJson("myshpfile.geojson").add_to(m)
 # Display the folium map using st_folium
 st_folium(m)
 
