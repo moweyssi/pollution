@@ -50,7 +50,7 @@ point_gdf = gpd.GeoDataFrame({'geometry': [point]}, crs='EPSG:27700')
 fig, ax = plt.subplots(figsize=(8, 8))
 
 # Use contextily to add a basemap with a valid zoom level (e.g., 10)
-ctx.add_basemap(ax, crs=gdf.crs.to_string(), source=ctx.providers.OpenStreetMap.Mapnik, zoom=10)
+ctx.add_basemap(ax, crs=gdf.crs.to_string(), source=ctx.providers.OpenStreetMap.Mapnik, zoom=1)
 
 gdf.plot(ax=ax, color='blue', alpha=0.7)
 point_gdf.plot(ax=ax, color='red', markersize=50, label='Target Point')
