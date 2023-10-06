@@ -41,12 +41,18 @@ except Exception as e:
 # Transform the point to the same CRS as the GeoDataFrame
 point = Point(transformer.transform(longitude, latitude))
 
-# Check if the point is within any of the geometries in the GeoDataFrame
-is_within_area = gdf.geometry.contains(point).any()
+# Initialize a variable to store the area name
+area_name = None
 
-# Display the result
-if is_within_area:
-    st.success(f"The postcode {postcode_to_check} is within a smoke control area.")
+# Check if the point is within any of the geometries in the GeoDataFrame
+for idx, row in gdf.iterrows():
+    if row["geometry"].contains(point):
+        area_name = row["Name"]  # Assuming "Name" is the column containing area names
+        break
+
+# Display the result along with the area name
+if area_name:
+    st.success(f"The postcode {postcode_to_check} is within the smoke control area: {area_name}.")
 else:
     st.warning(f"The postcode {postcode_to_check} is not within a smoke control area.")
 
