@@ -41,12 +41,13 @@ except Exception as e:
 # Transform the point to the same CRS as the GeoDataFrame
 point = Point(transformer.transform(longitude, latitude))
 
-# Check if the point is within any of the geometries in the GeoDataFrame
-is_within_area = gdf.geometry.contains(point).any()
+# Perform a spatial join to get the area name
+joined = gpd.sjoin(gdf, gpd.GeoDataFrame(geometry=[point]), op='contains', how='inner')
 
-# Display the result
-if is_within_area:
-    st.success(f"The postcode {postcode_to_check} is within a smoke control area.")
+# Display the result along with the area name if available
+if not joined.empty:
+    area_name = joined.iloc[0]['Name']  # Assuming "Name" is the column containing area names
+    st.success(f"The postcode {postcode_to_check} is within the smoke control area: {area_name}.")
 else:
     st.warning(f"The postcode {postcode_to_check} is not within a smoke control area.")
 
