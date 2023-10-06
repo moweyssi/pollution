@@ -42,7 +42,7 @@ except Exception as e:
 point = Point(transformer.transform(longitude, latitude))
 
 # Perform a spatial join to get the area name
-joined = gpd.sjoin(gdf, gpd.GeoDataFrame(geometry=[point]), op='contains', how='inner')
+joined = gdf[gdf.geometry.contains(point)]
 
 # Display the result along with the area name if available
 if not joined.empty:
